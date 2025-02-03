@@ -3,9 +3,11 @@ using System.Security.Claims;
 using BookStore.DataAccess.Repository;
 using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using BookStore.Models.ViewModels;
 using BookStore.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebBookStore.Areas.Customer.Controllers
 {
@@ -24,8 +26,26 @@ namespace WebBookStore.Areas.Customer.Controllers
         public IActionResult Index()
         {
 
-           IEnumerable<Product> productList = _unitOfWork.Products.GetAll(includeProperties: "Category");
+            IEnumerable<Product> productList = _unitOfWork.Products.GetAll(includeProperties: "Category");
             return View(productList);
+        }
+
+        public IActionResult Category()
+        {
+            var categories = _unitOfWork.Category.GetAll();
+            var products = _unitOfWork.Products.GetAll();
+            var model = new Tuple<IEnumerable<Category>, IEnumerable<Product>>(categories, products);
+            return View(model);
+
+        }
+
+        public IActionResult CategoryProducts(int categoryId)
+        {
+            var category = _unitOfWork.Category.Get(c => c.Id == categoryId);
+            var products = _unitOfWork.Products.GetAll().Where(p => p.CategoryId == categoryId);
+
+            var model = new Tuple<IEnumerable<Category>, IEnumerable<Product>>(new List<Category> { category }, products);
+            return View(model);
         }
         public IActionResult Details(int productId)
         {
@@ -51,13 +71,13 @@ namespace WebBookStore.Areas.Customer.Controllers
 
             if (shoppingCart.Count < 1)
             {
-                TempData["ErrorMessage"] = "The count must be at least 1.";
+                TempData["warning"] = "The count must be at least 1.";
                 return RedirectToAction("Details", new { productId = shoppingCart.ProductId });
             }
 
             if (product == null || product.stock_quantity < shoppingCart.Count )
             {
-                TempData["ErrorMessage"] = $"The product '{product?.Title}' is not available in the requested quantity.";
+                TempData["warning"] = $"The product '{product?.Title}' is not available in the requested quantity.";
                 return RedirectToAction("Details", new { productId = shoppingCart.ProductId });
             }
 

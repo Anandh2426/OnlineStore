@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using BookStore.DataAccess.Data;
 using BookStore.DataAccess.Repository.IRepository;
 using BookStore.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BookStore.DataAccess.Repository
 {
@@ -25,6 +26,14 @@ namespace BookStore.DataAccess.Repository
             _db.Categories.Update(obj);
         }
 
-      
+        Category ICategoryRepository.GetFirstOrDefault(Func<object, bool> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Category Get(System.Linq.Expressions.Expression<Func<Category, bool>> filter)
+        {
+            return _db.Categories.SingleOrDefault(filter);
+        }
     }
 }

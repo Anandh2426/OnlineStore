@@ -1,0 +1,57 @@
+﻿@model Tuple<IEnumerable<Category>, IEnumerable<Product>>
+
+<div class="container">
+    <div class="row">
+        @foreach (var category in Model.Item1)
+        {
+            <div class="col-lg-3 col-sm-6 mb-4">
+                <div class="card border-0 p-3 shadow border-top border-5 rounded">
+                    <div class="card-body text-center">
+
+                        <!-- Slider for book images -->
+                        <div id="carousel-@category.Id" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @foreach (var product in Model.Item2.Where(p => p.CategoryId == category.Id).Take(3))
+                                {
+                                    <div class="carousel-item @(product.Equals(Model.Item2.Where(p => p.CategoryId == category.Id).First()) ? "active" : "")">
+                                        <img src="@product.ImageUrl" class="d-block w-100" alt="@product.Title">
+                                    </div>
+                                }
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel-@category.Id" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel-@category.Id" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                        <!-- Category name -->
+                    </div>
+                    <div class="pl-2">
+                        <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@category.Name</p>
+                        <p class="card-title text-warning text-center">Available: @Model.Item2.Count(p => p.CategoryId == category.Id) books</p>
+                    </div>
+                    <a asp-action="CategoryProducts" asp-route-categoryId="@category.Id" class="btn btn-primary bg-gradient border-0 form-control"> MORE </a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .category-link {
+        text-decoration: none;
+    }
+
+        .category-link:hover {
+            text-decoration: none;
+        }
+
+    .carousel .carousel-inner .carousel-item img {
+        max-height: 500px;
+        object-fit: cover;
+    }
+</style>

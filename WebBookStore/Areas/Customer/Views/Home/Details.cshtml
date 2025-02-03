@@ -1,12 +1,12 @@
 ﻿@model ShoppingCart
-
+@* 
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">
         @TempData["ErrorMessage"]
     </div>
 }
-
+ *@
 <form method="post">
     <input hidden asp-for="ProductId" />
     <div class="card shadow border-0 mt-4">
@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-12 col-lg-6 offset-lg-1">
                         <div class="col-12 col-md-6 pb-4">
-                            <span class="badge">@Model.Product.Category.Name</span>
+                            <span class="badge bg-warning text-opacity-50">@Model.Product.Category.Name</span>
                         </div>
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50 ">ISBN : @Model.Product.ISBN</h6>
@@ -92,10 +92,18 @@
                         </div>
                         <div class="row">
                             <div class="col-12 col-md-6 pb-1">
-                                <button type="submit"
-                                         class="btn btn-primary bg-gradient  w-100 py-2 text-uppercase fw-semibold">
-                                    Add to Cart
-                                </button>
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <button type="submit" class="btn btn-danger bg-gradient w-100 py-2 text-uppercase fw-semibold" disabled>
+                                        Add to Cart (Admin)
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary bg-gradient w-100 py-2 text-uppercase fw-semibold">
+                                        Add to Cart
+                                    </button>
+                                }
                             </div>
                         </div>
                     </div>

@@ -46,3 +46,12 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+.category-button {
+    cursor: pointer;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    margin-bottom: 10px;
+}
+

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -114,7 +115,8 @@ namespace WebBookStore.Areas.Identity.Pages.Account
             public string? City { get; set; }
             public string? State { get; set; }
             public string? PostalCode { get; set; }
-            public string? PhoneNumber { get; set; }
+            [IntegerValidator,MaxLength=10]
+            public int PhoneNumber { get; set; }
             //public int? CompanyId { get; set; }
             //[ValidateNever]
             //public IEnumerable<SelectListItem> CompanyList { get; set; }
